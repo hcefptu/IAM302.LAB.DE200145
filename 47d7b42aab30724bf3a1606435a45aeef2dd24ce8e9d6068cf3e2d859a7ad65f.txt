@@ -1,0 +1,52 @@
+======================================================================
+[*] ĐANG TỔNG HỢP BÁO CÁO TOÀN DIỆN: 47d7b42aab30724bf3a1606435a45aeef2dd24ce8e9d6068cf3e2d859a7ad65f.exe
+======================================================================
+  [>] Đang chạy FLOSS & StringSifter (Quá trình này tốn vài phút)...
+  [>] Đang săn lùng chuỗi ẩn bằng FLOSS nâng cao (Stack/Decoded)...
+  [>] Đang trích xuất Mạng & Email & Hashes (iocextract)...
+  [>] Đang quét Chỉ báo Hành vi & Lệnh ngầm (grep Regex)...
+
+-------------------- BÁO CÁO THREAT INTEL: 47d7b42aab30724bf3a1606435a45aeef2dd24ce8e9d6068cf3e2d859a7ad65f.exe --------------------
+
+--- I. MẠNG & DANH TÍNH KẺ TẤN CÔNG ---
+
+[+] Địa chỉ IP (Nghi ngờ C&C):
+  -> Không tìm thấy dữ liệu.
+
+[+] URLs / Domains (Tải Payload):
+  -> Không tìm thấy dữ liệu.
+
+[+] Địa chỉ Email (Exfiltration):
+  -> Không tìm thấy dữ liệu.
+
+[+] Mã băm nhúng sẵn (Blacklist/Integrity):
+  -> Không tìm thấy dữ liệu.
+
+--- II. DẤU VẾT HỆ THỐNG (Persistence & Dropper) ---
+
+[+] Khóa Registry (Cài cắm khởi động):
+  -> Không tìm thấy dữ liệu.
+
+[+] Tệp tin nghi ngờ thả xuống (Dropped Files):
+  - mscoree.dll
+  - Stub.exe
+  - system.exe
+  - SbieDll.dll
+  - kernel32.dll
+  - .bat
+  - schtasks.exe
+  - ntdll.dll
+
+--- III. CHỈ BÁO HÀNH VI (Behavioral IOCs) ---
+
+[+] Đường dẫn PDB (Thông tin biên dịch):
+  -> Không tìm thấy dữ liệu.
+
+[+] Lệnh ngầm hệ thống (Living off the Land):
+  -> Không tìm thấy dữ liệu.
+
+[+] Hàm API Nhạy cảm (Injection/Keylogger):
+  -> Không tìm thấy dữ liệu.
+
+[+] Chuỗi ẩn (Stack/Decoded Strings):
+  -> Không tìm thấy dữ liệu.
